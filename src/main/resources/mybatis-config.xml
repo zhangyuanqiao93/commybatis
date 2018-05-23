@@ -10,6 +10,9 @@
         <!--当返回行的所有列都是空时，MyBatis默认返回null-->
         <!--<setting name="returnInstanceForEmptyRow" value="true"/>-->
         <setting name="logImpl" value="LOG4J"/>
+        <!--延迟加载设置fetchType-lazy-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <typeAliases>
         <typeAlias type="com.entity.User" alias="user"/>
@@ -31,5 +34,7 @@
 
     <mappers>
         <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/StudentMapper.xml"/>
+        <mapper resource="mapper/ClazzMapper.xml"/>
     </mappers>
 </configuration>
