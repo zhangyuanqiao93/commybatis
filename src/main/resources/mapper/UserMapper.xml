@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.UserMapper">
+    <!--配置二级缓存开启（需要在mybatis-config.xml中setting开启二级缓存），
+    指定收回策略为LRU，60秒刷新一次，只有在DML时刷新，默认缓存数目1024，设置对象为只读-->
+    <cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"/>
     <!--查询所有用户数据-->
     <select id="selectAllUserById" parameterType="int" resultType="user">
         SELECT * FROM user WHERE id=#{id}
@@ -9,4 +12,21 @@
     <insert id="saveUser" parameterType="user" useGeneratedKeys="true">
         INSERT INTO user(name,age) VALUES (#{name},#{age})
     </insert>
+
+    <!--test:将pattern进行参数绑定-->
+    <select id="selectBlogsLike" resultType="Blog">
+        <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+        SELECT * FROM BLOG
+        WHERE title LIKE #{pattern}
+    </select>
+    <!--test多数据库支持-->
+    <insert id="insert">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            <if test="_databaseId == 'db2'">
+                SELECT nextVal FOR seq_user FROM sysibm.sysydummy1
+            </if>
+        </selectKey>
+        INSERT  INTO users VALUES (#{id},#{name})
+    </insert>
+
 </mapper>

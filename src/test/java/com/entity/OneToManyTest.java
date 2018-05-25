@@ -1,6 +1,7 @@
 package com.entity;
 
 import com.mapper.ClazzMapper;
+import com.mapper.StudentMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * mybatis一对多项目测试
  */
-public class OnetoManyTest {
+public class OneToManyTest {
     public static void main(String[] args) {
         String config = "mybatis-config.xml";
         SqlSession session = null;
@@ -26,12 +27,16 @@ public class OnetoManyTest {
                 session = sqlSessionFactory.openSession();
 
 //                测试一对多
-                OnetoManyTest test = new OnetoManyTest();
+                OneToManyTest test = new OneToManyTest();
+
+                /*测试一对多*/
+                test.testSelectStudentById(session);
                 test.testSelectClazzById(session);
                 session.commit();
             } catch (IOException e) {
                 e.printStackTrace();
             }finally {
+                /*Session关闭*/
                 if (session != null) {
                     session.close();
                 }
@@ -44,6 +49,7 @@ public class OnetoManyTest {
      * @param session session
      */
     private void testSelectClazzById(SqlSession session) {
+        System.out.println("testSelectClazzById method");
 
         /*获得ClazzMapper接口的代理对象*/
         ClazzMapper clazzMapper = session.getMapper(ClazzMapper.class);
@@ -55,8 +61,22 @@ public class OnetoManyTest {
         List<Student> students = clazz.getStudents();
         for (Student stu:
              students) {
-            System.out.println(stu);
+            System.out.println("students: "+ stu);
         }
+
+    }
+
+    /**
+     * 多个学生对应一个班级
+     * @param sqlSession session
+     */
+    public void testSelectStudentById(SqlSession sqlSession){
+        /*获取StudentMapper接口的代理对象*/
+        StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+        Student student = studentMapper.selectStudentById(1);
+        System.out.println(student);
+        /*查看Student对象关联的班级信息*/
+        System.out.println(student.getClazz());
 
     }
 

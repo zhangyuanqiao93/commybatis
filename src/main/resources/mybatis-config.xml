@@ -13,6 +13,8 @@
         <!--延迟加载设置fetchType-lazy-->
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
+        <!--开启二级缓存,默认为false-->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
     <typeAliases>
         <typeAlias type="com.entity.User" alias="user"/>
@@ -21,6 +23,8 @@
     <environments default="development">
         <environment id="development">
             <!--使用了 JDBC 的提交和回滚设置，它依赖于从数据源得到的连接来管理事务作用域-->
+            <!--使用JDBC类型的事务管理机制创建一个JdbcTransaction-->
+            <!--MANAGED创建一个ManagedTransactionFactory-->
             <transactionManager type="JDBC"/>
             <!--使用数据池，复用实例-->
             <dataSource type="POOLED">
@@ -31,7 +35,6 @@
             </dataSource>
         </environment>
     </environments>
-
     <mappers>
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/StudentMapper.xml"/>
